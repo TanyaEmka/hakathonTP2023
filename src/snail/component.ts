@@ -3,16 +3,10 @@ export abstract class Component {
     protected tmpl: Function;
     protected domElement?: HTMLElement | undefined;
     protected props?: Props | undefined;
-    protected context: Props;
 
-    constructor(tmpl: Function, context?: Props, props?: Props) {
+    constructor(tmpl: Function, props?: Props) {
         this.tmpl = tmpl;
         this.props = props;
-        if (context) {
-            this.context = structuredClone(context);
-        } else {
-            this.context = {};
-        }
     }
 
     update() {

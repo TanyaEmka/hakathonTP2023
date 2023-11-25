@@ -9,3 +9,7 @@ interface Props {
   style?: Dict<string>;
   [key: string]: PropValue;
 }
+
+interface ContextType {
+  [key: string]: number | string | undefined;
+}

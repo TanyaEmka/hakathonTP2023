@@ -1,18 +1,31 @@
-import { Component } from '../../snail/component';
 import template from './button.hbs';
+
+import { Component } from '../../snail/component';
 import { stringToElement } from '../../utility/stringToElem';
 
-export class Button extends Component {
+interface ButtonPropsType {
+    name: string,
+    clickFunction?: Function
+}
 
-    constructor(context?: Props, props?: Props) {
-        super(template, context, props);
+export class Button extends Component {
+    buttonProps: ButtonPropsType;
+    context: ContextType;
+
+    constructor(buttonProps: ButtonPropsType, props?: Props) {
+        super(template, props);
+        this.buttonProps = buttonProps;
+        this.context = {
+            name: this.buttonProps.name
+        }
     }
 
     render(): HTMLElement {
         this.domElement = stringToElement(this.tmpl(this.context));
         this.domElement.addEventListener("click", (e) => {
-            (this.context.count as number) += 1;
-            this.updateInnerElement(this.domElement, this.context.count);
+            if (this.buttonProps.clickFunction) {
+                this.buttonProps.clickFunction();
+            }
         });
 
         return this.domElement;
