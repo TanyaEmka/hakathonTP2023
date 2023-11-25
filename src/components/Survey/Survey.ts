@@ -16,6 +16,7 @@ interface BodyType {
     answers: Array<number>;
 }
 
+
 export class Survey extends Component {
     questions: Array<QuestionProps>;
     title: string;
@@ -30,8 +31,13 @@ export class Survey extends Component {
     }
 
     async getQuestions() {
-        /*this.questions = [initData1];
-        this.title = 'Опрос';*/
+        if (!this.domElement) {
+            throw new Error('Survey is undefined');
+        }
+        /*
+        this.questions = [initData1];
+        this.title = 'Опрос';
+        */
         const resp = await SurveyAjax.getSurveyParams();
         const body = resp.body;
         if (resp.status != 200) {
@@ -40,6 +46,17 @@ export class Survey extends Component {
         console.log(body);
         this.questions = body.questions;
         this.title = body.title;
+
+        const questionBox = this.domElement.querySelector('#questions-box');
+        if (!questionBox) {
+            throw new Error('Question box is undefined');
+        }
+
+        questionBox.innerHTML = '';
+        this.questions.map((question: QuestionProps) => {
+            const q = new Question(question);
+            questionBox.appendChild(q.render());
+        });
     }
 
     async getAnswers() {
@@ -74,17 +91,6 @@ export class Survey extends Component {
         }
 
         this.getQuestions();
-
-        const questionBox = this.domElement.querySelector('#questions-box');
-        if (!questionBox) {
-            throw new Error('Question box is undefined');
-        }
-
-        questionBox.innerHTML = '';
-        this.questions.map((question: QuestionProps) => {
-            const q = new Question(question);
-            questionBox.appendChild(q.render());
-        });
 
         const sendBtn = new Button({ name: 'Отправить', clickFunction: this.getAnswers.bind(this) });
 
