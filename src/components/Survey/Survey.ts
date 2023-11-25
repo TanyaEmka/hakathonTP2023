@@ -10,6 +10,8 @@ import { SurveyAjax } from "../../shared/api/survey";
 
 import { AnswerProps, QuestionProps, initData1 } from '../../types/question';
 
+import App from '../../App';
+
 interface BodyType {
     answers: Array<number>;
 }
@@ -28,6 +30,8 @@ export class Survey extends Component {
     }
 
     async getQuestions() {
+        //this.questions = [initData1];
+        //this.title = 'Опрос';
         const resp = await SurveyAjax.getSurveyParams();
         const body = resp.body;
         if (resp.status != 200) {
@@ -48,6 +52,7 @@ export class Survey extends Component {
         this.questions.map((question: QuestionProps) => {
             question.answers.map((answer: AnswerProps) => {
                 const answerBox = document.querySelector('#answer-' + answer.id.toString()) as HTMLInputElement;
+                console.log(answerBox, answerBox.checked);
                 if (answerBox.checked) {
                     result.answers.push(answer.id);
                 }

@@ -9,12 +9,14 @@ import { Signup } from "./pages/signup/signup";
 
 class App extends Component {
     router: Router;
+    MainPage: Main;
 
     constructor(props?: Props) {
         super(() => { console.log('Welcome to the App!') }, props);
         this.domElement = document.body.querySelector("#root") as HTMLElement;
+        this.MainPage = new Main();
         this.router = new Router([        
-            new Route(new RegExp('^/$'), new Main()),
+            new Route(new RegExp('^/$'), this.MainPage),
             new Route(new RegExp('^/signin$'), new Signin()),
             new Route(new RegExp('^/signup$'), new Signup()),
             new Route(new RegExp('^/survey$'), new Survey()),
@@ -23,6 +25,10 @@ class App extends Component {
 
     goToMainPage() {
         this.router.navigateTo("/");
+    }
+
+    updateMainPage() {
+        this.MainPage.closeSurvey();
     }
 
     render(): HTMLElement {
