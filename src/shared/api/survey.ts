@@ -11,6 +11,9 @@ export const SurveyAjax = {
         return await ajax.get({
             url: SURVEY_API.GET,
             credentials: 'include',
+            params: {
+                'test_id': 1
+            }
         });
     },
 

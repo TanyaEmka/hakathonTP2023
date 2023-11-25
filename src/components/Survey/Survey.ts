@@ -30,8 +30,8 @@ export class Survey extends Component {
     }
 
     async getQuestions() {
-        //this.questions = [initData1];
-        //this.title = 'Опрос';
+        /*this.questions = [initData1];
+        this.title = 'Опрос';*/
         const resp = await SurveyAjax.getSurveyParams();
         const body = resp.body;
         if (resp.status != 200) {
