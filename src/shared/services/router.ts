@@ -33,7 +33,7 @@ export class Router {
         this.loadRoute();
     }
 
-    navigateTo(url: string, state: any) {
+    navigateTo(url: string, state: any = {}) {
         history.pushState(state, "", url);
         this.loadRoute();
     }

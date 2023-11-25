@@ -5,6 +5,8 @@ import { stringToElement } from '../../utility/stringToElem';
 
 import { Button } from '../../components/button/button';
 
+import App from '../../App';
+
 export class Main extends Component {
     context: ContextType;
 
@@ -44,8 +46,19 @@ export class Main extends Component {
             throw new Error("Main is undefined");
         }
 
+        const contentContainer = this.domElement.querySelector('#main-content') as HTMLElement;
+        if (!contentContainer) {
+            throw new Error("Main content is undefined");
+        }
+
+        contentContainer.innerHTML = '';
+
         const openSurveyBtn = new Button({ name: "Оценить", clickFunction: this.openSurvey.bind(this) });
-        openSurveyBtn.appendTo(this.domElement);
+        openSurveyBtn.appendTo(contentContainer);
+
+        const signinBtn = new Button({ name: "Войти", clickFunction: () => { App.router.navigateTo('/signin'); } });
+        signinBtn.appendTo(contentContainer);
+
 
         return this.domElement;
     }

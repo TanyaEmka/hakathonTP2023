@@ -5,6 +5,8 @@ import { Button } from "./components/button/button";
 import { Survey } from "./components/Survey/Survey";
 
 import { Main } from "./pages/main/main";
+import { Signin } from "./pages/signin/signin";
+import { Signup } from "./pages/signup/signup";
 
 class App extends Component {
     router: Router;
@@ -14,8 +16,8 @@ class App extends Component {
         this.domElement = document.body.querySelector("#root") as HTMLElement;
         this.router = new Router([        
             new Route(new RegExp('^/$'), new Main()),
-            new Route(new RegExp('^/signin$'), new Button({ name: 'signin' })),
-            new Route(new RegExp('^/signup$'), new Button({ name: 'signup' })),
+            new Route(new RegExp('^/signin$'), new Signin()),
+            new Route(new RegExp('^/signup$'), new Signup()),
             new Route(new RegExp('^/survey$'), new Survey({ name: 'Опрос' })),
         ], this.domElement);
     }
