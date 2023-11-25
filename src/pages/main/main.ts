@@ -9,12 +9,14 @@ import App from '../../App';
 
 export class Main extends Component {
     context: ContextType;
+    surveyVisible: boolean;
 
     constructor(props?: Props) {
         super(template, props);
 
         this.context = {};
         this.domElement = stringToElement(this.tmpl(this.context));
+        this.surveyVisible = false;
     }
 
     openSurvey() {
@@ -28,6 +30,8 @@ export class Main extends Component {
         survey.width = '300px';
         survey.height = '300px';
         surveyBlock?.appendChild(survey);
+
+        this.surveyVisible = true;
     }
 
     closeSurvey() {
@@ -39,12 +43,24 @@ export class Main extends Component {
         if (surveyBlock) {
             surveyBlock.innerHTML = '';
         }
+
+        this.surveyVisible = false;
+    }
+
+    updateSurvey() {
+        if (!this.surveyVisible) {
+            this.openSurvey();
+        } else {
+            this.closeSurvey();
+        }
     }
 
     render(): HTMLElement {
         if (!this.domElement) {
             throw new Error("Main is undefined");
         }
+
+        this.closeSurvey();
 
         const contentContainer = this.domElement.querySelector('#main-content') as HTMLElement;
         if (!contentContainer) {
@@ -53,7 +69,7 @@ export class Main extends Component {
 
         contentContainer.innerHTML = '';
 
-        const openSurveyBtn = new Button({ name: "Оценить", clickFunction: this.openSurvey.bind(this) });
+        const openSurveyBtn = new Button({ name: "Оценить", clickFunction: this.updateSurvey.bind(this) });
         openSurveyBtn.appendTo(contentContainer);
 
         const signinBtn = new Button({ name: "Войти", clickFunction: () => { App.router.navigateTo('/signin'); } });

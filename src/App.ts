@@ -1,7 +1,6 @@
 import { Component } from "./snail/component";
 import { Router, Route } from "./shared/services/router";
 
-import { Button } from "./components/button/button";
 import { Survey } from "./components/Survey/Survey";
 
 import { Main } from "./pages/main/main";
@@ -18,8 +17,12 @@ class App extends Component {
             new Route(new RegExp('^/$'), new Main()),
             new Route(new RegExp('^/signin$'), new Signin()),
             new Route(new RegExp('^/signup$'), new Signup()),
-            new Route(new RegExp('^/survey$'), new Survey({ name: 'Опрос' })),
+            new Route(new RegExp('^/survey$'), new Survey()),
         ], this.domElement);
+    }
+
+    goToMainPage() {
+        this.router.navigateTo("/");
     }
 
     render(): HTMLElement {

@@ -1,16 +1,27 @@
-/**
- * @file ajax.mjs
- * @module Ajax
- */
-
 import { applicationJson, multipartFormData } from '../constants/contentType';
 
-const { SCHEMA, API_URL } = process.env;
+interface AjaxPropsType {
+    method: string,
+    url: string,
+    params?: any,
+    body?: any,
+    headers: any,
+    credentials: any,
+    contentType: string,
+}
 
-/**
- * @constant
- * @summary Методы, поддерживаемые беком на данный момент
- */
+interface RequestPropsType {
+    url: string, 
+    params?: any,
+    body?: any, 
+    headers?: any, 
+    credentials: any, 
+    contentType?: string
+}
+
+const SCHEMA: string = 'http://';
+const API_URL: string = 'localhost';
+
 const AJAX_METHODS = {
     GET: 'GET',
     POST: 'POST',
@@ -19,33 +30,18 @@ const AJAX_METHODS = {
     PUT: 'PUT',
 };
 
-/**
- * @classdesc класс-обертка над fetch с нашими обработчиками
- * @name Ajax
- * @class
- */
 class Ajax {
-    port = '8080';
+    port: string = '8080';
+    ADRESS_BACKEND: string;
 
-    ADRESS_BACKEND = SCHEMA + API_URL + `:${this.port}/api/v1/`;
+    constructor() {
+        if (!SCHEMA || !API_URL) {
+            throw new Error('SCHEMA or API_URL are undefined')
+        }
 
-    /**
-     * @async
-     * @private
-     * @method
-     *
-     * @param {string} method  Метод запроса
-     * @param {string} url Адрес хоста
-     * @param {string} params Параметры для GET запроса
-     * @param {string} body Параметры для POST Запроса
-     *
-     * @default method 'GET'
-     * @default url '/'
-     * @default params null
-     * @default body null
-     *
-     * @returns {Promise}
-     */
+        this.ADRESS_BACKEND = SCHEMA + API_URL + `:${this.port}/api/v1/`;
+    }
+
     async #ajax({
         method = AJAX_METHODS.GET,
         url = '/',
@@ -54,7 +50,7 @@ class Ajax {
         headers = {},
         credentials = null,
         contentType = applicationJson,
-    } = {}) {
+    }: AjaxPropsType) {
         url = this.ADRESS_BACKEND + url;
         if (params) {
             url += `?${new URLSearchParams(params)}`;
@@ -63,7 +59,7 @@ class Ajax {
         headers.Accept = applicationJson;
         headers[ 'Content-Type' ] = contentType;
 
-        const config = {
+        const config: ContextType = {
             method,
             mode: 'cors',
             headers,
@@ -73,15 +69,15 @@ class Ajax {
             switch (contentType){
                 case applicationJson:
                     config.body = JSON.stringify(body);
+
                     break;
 
                 case multipartFormData: {
-                    // debugger
                     const formData = new FormData();
                     if (Object.keys(body).length !== 0) {
                         Object.keys(body).forEach((key) => {
                             if (Array.isArray(body[ key ])){
-                                body[ key ].forEach((file) => {
+                                body[ key ].forEach((file: any) => {
                                     formData.append(`${key}`, file);
                                 });
                             }
@@ -103,29 +99,18 @@ class Ajax {
         return await (await fetch(url, config)).json();
     }
 
-    /**
-     * @method
-     * @param {string} url Адрес хоста
-     * @param {string} params Параметры для GET запроса
-     * @returns {Promise}
-     */
-    get({ url, params, headers, credentials }) {
+    get({ url, params, headers={}, credentials, contentType=applicationJson }: RequestPropsType) {
         return this.#ajax({
             method: AJAX_METHODS.GET,
             url,
             params,
             headers,
             credentials,
+            contentType
         });
     }
 
-    /**
-     * @method
-     * @param {string} url Адрес хоста
-     * @param {string} params Параметры для POST Запроса
-     * @returns {Promise}
-     */
-    post({ url, body, headers, credentials, contentType }) {
+    post({ url, body, headers={}, credentials, contentType=applicationJson }: RequestPropsType) {
         return this.#ajax({
             method: AJAX_METHODS.POST,
             url,
@@ -136,17 +121,18 @@ class Ajax {
         });
     }
 
-    delete({ url, params, headers, credentials }) {
+    delete({ url, params, headers, credentials, contentType=applicationJson }: RequestPropsType) {
         return this.#ajax({
             method: AJAX_METHODS.DELETE,
             url,
             params,
             headers,
             credentials,
+            contentType
         });
     }
 
-    patch({ url, params, body, headers, credentials }) {
+    patch({ url, params, body, headers, credentials, contentType=applicationJson }: RequestPropsType) {
         return this.#ajax({
             method: AJAX_METHODS.PATCH,
             url,
@@ -154,10 +140,11 @@ class Ajax {
             body,
             headers,
             credentials,
+            contentType
         });
     }
 
-    put({ url, params, body, headers, credentials }) {
+    put({ url, params, body, headers, credentials, contentType=applicationJson }: RequestPropsType) {
         return this.#ajax({
             method: AJAX_METHODS.PUT,
             url,
@@ -165,6 +152,7 @@ class Ajax {
             body,
             headers,
             credentials,
+            contentType
         });
     }
 }

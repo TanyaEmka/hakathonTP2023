@@ -4,9 +4,10 @@ import { Component } from '../../snail/component';
 import { stringToElement } from '../../utility/stringToElem';
 
 interface InputPropsType {
-    value: string,
+    id?: string,
+    value?: string,
     type: string,
-    placeholder: string,
+    placeholder?: string,
     onChangeFunction?: Function
 }
 
@@ -17,11 +18,10 @@ export class Input extends Component {
     constructor(inputProps: InputPropsType, props?: Props) {
         super(template, props);
         this.inputProps = inputProps;
-        this.context = {
-            value: this.inputProps.value,
-            type: this.inputProps.type,
-            placeholder: this.inputProps.placeholder
-        };
+        this.context = {...this.inputProps};
+        if (!this.inputProps.placeholder) {
+            this.context.placeholder = '';
+        }
     }
 
     render(): HTMLElement {

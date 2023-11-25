@@ -11,5 +11,5 @@ interface Props {
 }
 
 interface ContextType {
-  [key: string]: number | string | undefined;
+  [key: string]: any;
 }
